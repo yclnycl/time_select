@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style>
+        html {
+            width: 100%;
+            height: 100%;
+        }
+        .cover {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            opacity: 0.5;
+            position: fixed;
+            left:0;
+            top:0;
+            z-index: 2;
+        }
+        .time {
+            display: none;
+            background: #fff;
+            width: 100%;
+            height: 70%;
+            position: absolute;
+            left:0;
+            bottom:0;
+            z-index:3;
+            overflow: auto;
+        }
+        .h3 {
+            border-bottom: 0.1rem solid #f2f2f2;
+            padding-bottom: 0.5rem;
+        }
+        .time_title{
+            position: absolute;
+            top: 0;
+            left:0;
+            width: 100%;
+            height: 5rem;
+        }
+        .time_week {
+            margin-top: 5rem;
+        }
+        .time_week ul {
+            width: 100%;
+            margin: 0;
+            border-bottom: 0.1rem solid #f2f2f2;
+        }
+        .time_week ul li {
+            width: 13.45%;
+            padding: 0;
+            height: 2rem;
+            line-height:2rem;
+        }
+    </style>
+    <title>时间选择器</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row  text-center">
+            <ul class="list-inline">
+                <li><input type="text" name="timestart" placeholder="xxxx-xx-xx"></li>
+                <li><input type="text" name="timeend" placeholder="xxxx-xx-xx"></li>
+            </ul>
+            <span style="display: block;width: 100%;height: 2rem;"></span>
+            <button class="btn btn-default">点击</button>
+        </div>
+        <div class="row">
+            <div class="cover">
+            </div>
+        </div>
+        <div class="row select">
+            <div class="time">
+                <div class="time_title">
+                    <div class="h3 text-center">时间选择器</div>
+                </div>
+                <div class="time_week">
+                    <ul class="list-inline text-center">
+                        <li>一</li>
+                        <li>二</li>
+                        <li>三</li>
+                        <li>四</li>
+                        <li>五</li>
+                        <li>六</li>
+                        <li>日</li>
+                    </ul>
+                </div>
+                <div class="time_week" style="margin-top: 1rem">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $(".btn").click(function () {
+        var timestart = $("input[name=timestart]").val();
+        var timeend = $("input[name=timeend]").val();
+        console.log(timeend)
+        if(timestart.split("-").length != 3 || timeend.split("-").length !=3){
+            alert("请检查输入时间");
+        }else{
+            $(".cover").css({"display":"block"})
+            $(".time").css({"display":"block"})
+            var month_length = timeend.split("-")[1] - timestart.split("-")[1];
+            for (var i = -1;i<month_length;i++){
+                var month = parseInt(timestart.split("-")[1])+parseInt(i)+parseInt(1)
+                var max = new Date(timestart.split("-")[0]*1,parseInt(timestart.split("-")[1])+parseInt(i)+parseInt(1),0).getDate();
+                var week = new Date(timestart.split("-")[0]*1,parseInt(timestart.split("-")[1])+parseInt(i)+parseInt(1),1).getDay();
+                var html = "<div class='h3 text-center'>"+month+"月</div>"
+                html += "<ul class='list-inline text-center'>"
+                for(var j = -(week)+2;j<=max;j++){
+                    if(j >0)
+                    {
+                        html+= "<li id='ok' date="+timestart.split("-")[0]+"-"+month+"-"+parseInt(j)+">"+j+"</li>"
+                    }else{
+                        html+= "<li></li>"
+                    }
+                }
+                html += "</ul>"
+                console.log(html)
+                $('.time_week:eq(1)').append(html)
+            }
+        }
+    })
+    $(document).on('click','#ok',function () {
+        $('span').text("您点击的是"+$(this).attr('date'))
+        $(document).remove($('.time_week:eq(1)').empty())
+        $(".cover").hide()
+        $(".time").hide()
+    })
+
+</script>
